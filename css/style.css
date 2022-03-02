@@ -1,0 +1,108 @@
+* {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+body {
+  background: #151d3b;
+}
+
+.container {
+  max-width: 1349px;
+}
+
+.inter {
+  width: 100%;
+}
+
+.btn {
+  float: right;
+  padding: 0.5em 2em 0 0;
+}
+
+.btn button {
+  border: none;
+  background-color: #6ebf8b;
+  padding: 0.5em 2em;
+  cursor: pointer;
+}
+
+.grid_note {
+  padding-top: 5em;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (1fr)[3];
+      grid-template-columns: repeat(3, 1fr);
+  gap: 1em;
+}
+
+.grid_note .row {
+  margin-bottom: 3em;
+}
+
+.grid_note_color,
+.grid_note h3,
+.grid_note .icon_edit {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.grid_note_content {
+  background: #dadbbd;
+  height: 100%;
+}
+
+.grid_note_color {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: right;
+      -ms-flex-pack: right;
+          justify-content: right;
+  background: #d82148;
+}
+
+.grid_note_color .icon_edit {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+.grid_note_color .icon_edit img {
+  max-width: 100%;
+  height: 100%;
+}
+
+.grid_note_content {
+  width: 100%;
+  height: 100%;
+  background: #FFFFFF;
+}
+
+.grid_note_content textarea {
+  min-height: 20em;
+  max-height: 30em;
+  padding: 0;
+  width: inherit;
+  height: inherit;
+  border: none;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 443px) {
+  .grid_note {
+    -ms-grid-columns: 1fr;
+        grid-template-columns: 1fr;
+  }
+}
+/*# sourceMappingURL=style.css.map */
