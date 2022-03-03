@@ -77,7 +77,7 @@ function addNote(text = "") {
     </div>
     <div class="col-12 col-sm-12 grid_note_content">
     <div class="context"></div>
-            <textarea class="textarea"></textarea>
+        <textarea class="textarea"></textarea>
     </div>
     </div>`
     main.appendChild(para);
