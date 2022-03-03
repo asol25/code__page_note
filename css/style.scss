@@ -18,16 +18,12 @@ body {
     float: right;
     padding: 0.5em 2em 0 0;
 
-    button {
+    #button {
         border: none;
         border-radius: 5px;
         background-color: #6ebf8b;
         padding: 0.5em 2em;
         cursor: pointer;
-    }
-    .fas {
-        color: black;
-        font-family: "Font Awesome 5 Free";
     }
 }
 
