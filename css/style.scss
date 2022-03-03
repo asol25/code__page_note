@@ -20,9 +20,14 @@ body {
 
     button {
         border: none;
+        border-radius: 5px;
         background-color: #6ebf8b;
         padding: 0.5em 2em;
         cursor: pointer;
+    }
+    .fas {
+        color: black;
+        font-family: "Font Awesome 5 Free";
     }
 }
 
@@ -38,41 +43,43 @@ body {
 
     &_color,
     h3,
-    .icon_edit {
-        display: flex;
-        justify-content: space-between;
-    }
     &_content {
         background: #dadbbd;
         height: 100%;
     }
 }
 
-.grid_note_color {
+.icon_edit {
+    background-color: #9ec862;
     display: flex;
-    align-items: center;
-    justify-content: right;
-    background: #d82148;
+    justify-content: flex-end;
+    padding: 0.5rem;
+    cursor: pointer;
+    width: 100%;
+    height: 42px;
 
-    .icon_edit {
-        width: 32px;
-        height: 32px;
-        cursor: pointer;
-
-        img {
-            max-width: 100%;
-            height: 100%;
-        }
+    img {
+        max-width: 100%;
+        height: 100%;
     }
 }
 
 .grid_note_content {
     width: 100%;
-    height: 100%;
-    background: #FFFFFF;
-    textarea {
-        min-height: 20em;
-        max-height: 30em;
+    height: 400px;
+    padding: 0;
+    background: #ffffff;
+
+    .context {
+        background-color: #eee;
+        display: none;
+        height: 400px;
+        width: 100%;
+    }
+
+    .textarea {
+        outline: none;
+        width: 100%;
         padding: 0;
         width: inherit;
         height: inherit;
@@ -81,7 +88,16 @@ body {
 }
 
 .hidden {
-    display: none;
+    display: block !important;
+}
+.none {
+    display: none !important;
+}
+
+@media (max-width: 787px) {
+    .grid_note {
+        grid-template-columns: 1fr 1fr;
+    }
 }
 @media (max-width: 443px) {
     .grid_note {
