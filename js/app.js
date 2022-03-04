@@ -41,7 +41,7 @@ function addData(text) {
         let indexdb = db;
         let transaction = indexdb.transaction(['notes'], 'readwrite');
         let objectStore = transaction.objectStore('notes');
-        let request = objectStore.add(data);
+        let request = objectStore.put(data);
         console.log('Add data final!' + data);
     }
 }
@@ -106,6 +106,7 @@ function addNote(cursorTEX = "", cursorID) {
             textArea.classList.remove('none');
             context.classList.remove('hidden')
             count = true;
+            updateObject(textArea);
         }
     });
     deleteBtn.addEventListener('click', () => {
@@ -119,6 +120,24 @@ function addNote(cursorTEX = "", cursorID) {
         context.append(p);
     })
     main.appendChild(para);
+}
+
+function updateObject(e) {
+    let indexdb = db;
+    let transaction = indexdb.transaction(['notes'], 'readwrite');
+    let objectStore = transaction.objectStore('notes');
+    const objectStoreTitleRequest = objectStore.get(text);
+
+    objectStore.onsuccess = function() {
+        const data = objectStoreTitleRequest.result;
+        data.notified = e.value;
+
+        const updateTitleRequest = objectStore.put(data);
+
+        updateTitleRequest.onsuccess = () => {
+            getAllTodoItems();
+          };
+    }
 }
 
 
