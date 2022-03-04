@@ -13,59 +13,6 @@ if (notes) {
     });
 }
 
-let db = null;
-
-function Database(obj) {
-    let request = window.indexedDB.open('note_os', 3);
-
-    request.onerror = function () {
-        console.log(request.error);
-    }
-
-    request.onsuccess = function (e) {
-        db = e.target.result;
-        addData(obj);
-        console.log('We have data ');
-        Display(e);
-    }
-
-    request.onupgradeneeded = function (e) {
-        let db = request.result;
-        let objectStore = db.createObjectStore('notes', { keyPath: 'id', autoIncrement: true });
-        objectStore.createIndex('information', 'information', { unique: false });
-        console.log('Set up 100% Database')
-    }
-}
-
-function addData(e) {
-    if (!e == '') {
-        let content = { information: e };
-        console.log('log content: ' + e);
-        let transaction = db.transaction('notes', 'readwrite');
-        let object = transaction.objectStore('notes');
-        let request = object.add(content);
-
-        return request;
-    }
-}
-
-function Display(e) {
-    console.log('Display now')
-    let transaction = db.transaction('notes', 'readwrite');
-    let object = transaction.objectStore('notes');
-    object.openCursor().onsuccess = function (e) {
-        let cursor = e.target.result;
-        if (cursor) {
-            let arrays = [];
-            arrays.push(cursor.value.information);
-            for (let index = 0; index < arrays.length; index++) {
-                console.log(arrays[index]);
-            }
-            cursor.continue();
-        }
-    }
-}
-
 function addNote(text = "") {
     const para = document.createElement('div');
     para.classList.add('row');
@@ -100,7 +47,6 @@ function addNote(text = "") {
             textArea.classList.add('none');
             context.classList.add('hidden')
             count = false;
-            updateDB();
         } else {
             textArea.classList.remove('none');
             context.classList.remove('hidden')
@@ -113,8 +59,6 @@ function addNote(text = "") {
     });
 
     textArea.addEventListener("input", (e) => {
-        const { value } = e.target;
-
         updateDB();
     });
 

@@ -5,10 +5,10 @@ button.addEventListener('click', () => {
     addNote();
 });
 
-
 let db = null;
 
-function Database(obj) {
+window.onload = Database();
+function Database(text) {
     let request = window.indexedDB.open('note_os', 3);
 
     request.onerror = function () {
@@ -17,52 +17,64 @@ function Database(obj) {
 
     request.onsuccess = function (e) {
         db = e.target.result;
-        addData(obj);
         console.log('We have data ');
-        Display(e);
+        addData(text);
+        getAllTodoItems();
     }
 
     request.onupgradeneeded = function (e) {
-        let db = request.result;
-        let objectStore = db.createObjectStore('notes', { keyPath: 'id', autoIncrement: true });
-        objectStore.createIndex('information', 'information', { unique: false });
+        let db = e.target.result;
+        let objectStore = db.createObjectStore('notes', { keyPath: 'id' });
+        objectStore.createIndex('text_os', 'text', { unique: false });
         console.log('Set up 100% Database')
     }
 }
 
-function addData(e) {
-    if (!e == '') {
-        let content = { information: e };
-        console.log('log content: ' + e);
-        let transaction = db.transaction('notes', 'readwrite');
-        let object = transaction.objectStore('notes');
-        let request = object.add(content);
+function addData(text) {
+    if (!text == '') {
+        let data =
+        {
+            text: text,
+            id: new Date().getTime()
 
-        return request;
+        };
+        let indexdb = db;
+        let transaction = indexdb.transaction(['notes'], 'readwrite');
+        let objectStore = transaction.objectStore('notes');
+        let request = objectStore.add(data);
+        console.log('Add data final!' + data);
     }
 }
 
-function Display(e) {
-    console.log('Display now')
-    let transaction = db.transaction('notes', 'readwrite');
-    let object = transaction.objectStore('notes');
-    object.openCursor().onsuccess = function (e) {
-        let cursor = e.target.result;
-        if (cursor) {
-            let arrays = [];
-            arrays.push(cursor.value.information);
-            for (let index = 0; index < arrays.length; index++) {
-                console.log(arrays[index]);
-            }
-            cursor.continue();
+function deleteDB(id) {
+    let indexdb = db;
+    let transaction = indexdb.transaction(['notes'], 'readwrite');
+    let objectStore = transaction.objectStore('notes');
+
+    var request = objectStore.delete(id);
+    console.log('Database has remove data');
+}
+
+function getAllTodoItems() {
+    console.log('Start get all data')
+    main.innerHTML = '';
+
+    let indexdb = db;
+    let transaction = indexdb.transaction(['notes'], 'readwrite');
+    let objectStore = transaction.objectStore('notes');
+    var cursorRequest = objectStore.openCursor();
+    cursorRequest.onsuccess = function (e) {
+        var result = e.target.result;
+        if (result) {
+            addNote(result.value.text, result.value.id);
+            result.continue();
         }
-    }
+    };
 }
 
-function addNote() {
+function addNote(cursorTEX = "", cursorID) {
     const para = document.createElement('div');
     para.classList.add('row');
-
     para.innerHTML = ` <div class="col-12 grid_note_container">                                
     <div class="col-12 icon_edit">
         <img src="images/edit.png" id="button_1" alt="icon_edit" srcset="">
@@ -70,7 +82,7 @@ function addNote() {
     </div>
     <div class="col-12 col-sm-12 grid_note_content">
     <div class= "context"></div>
-    <textarea id="textarea"></textarea>
+    <textarea class="textarea"></textarea>
     </div>
     </div>`
 
@@ -81,16 +93,15 @@ function addNote() {
     const p = document.createElement('p');
     let count = true;
 
-    const textArea = para.querySelector('#textarea');
+    const textArea = para.querySelector('textarea');
+    textArea.value = cursorTEX;
 
     saveBtn.addEventListener('click', () => {
         if (count) {
-            p.textContent = textArea.value;
-            context.append(p);
             textArea.classList.add('none');
             context.classList.add('hidden')
             count = false;
-            updateDB();
+            Database(textArea.value);
         } else {
             textArea.classList.remove('none');
             context.classList.remove('hidden')
@@ -99,25 +110,17 @@ function addNote() {
     });
     deleteBtn.addEventListener('click', () => {
         para.remove();
+        deleteDB(cursorID);
     });
 
+    textArea.addEventListener('input', (e) => {
+        const { value } = e.target;
+        p.textContent = value;
+        context.append(p);
+    })
     main.appendChild(para);
 }
 
-function updateDB() {
-    const valueTextArea = document.querySelectorAll('textarea');
-
-    let notes = [];
-
-    valueTextArea.forEach(e => {
-        notes.push(e.value);
-    });
-
-    notes.forEach(e => {
-        let obj = JSON.parse(JSON.stringify(e))
-        Database(obj);
-    });
-}
 
 
 
