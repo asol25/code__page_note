@@ -24,7 +24,7 @@ function Database(text) {
 
     request.onupgradeneeded = function (e) {
         let db = e.target.result;
-        let objectStore = db.createObjectStore('notes', { keyPath: 'id' });
+        let objectStore = db.createObjectStore('notes', { keyPath: 'id', autoIncrement: true });
         objectStore.createIndex('text_os', 'text', { unique: false });
         console.log('Set up 100% Database')
     }
@@ -118,6 +118,7 @@ function addNote(cursorTEX = "", cursorID) {
         const { value } = e.target;
         p.textContent = value;
         context.append(p);
+        updateObject(value);
     })
     main.appendChild(para);
 }
@@ -128,7 +129,7 @@ function updateObject(e) {
     let objectStore = transaction.objectStore('notes');
     const objectStoreTitleRequest = objectStore.get(text);
 
-    objectStore.onsuccess = function() {
+    objectStore.onsuccess = function () {
         const data = objectStoreTitleRequest.result;
         data.notified = e.value;
 
@@ -136,7 +137,7 @@ function updateObject(e) {
 
         updateTitleRequest.onsuccess = () => {
             getAllTodoItems();
-          };
+        };
     }
 }
 
