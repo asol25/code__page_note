@@ -1,20 +1,25 @@
 const button = document.getElementById('button');
 const main = document.getElementById('grid_note');
 
+// Add the future you need with interface
 button.addEventListener('click', () => {
     addNote();
 });
 
+
+// create database
 let db = null;
 
 window.onload = Database();
 function Database(text) {
     let request = window.indexedDB.open('note_os', 3);
 
+    // throw err when database err
     request.onerror = function () {
         console.log(request.error);
     }
 
+    // ex code when data has setup
     request.onsuccess = function (e) {
         db = e.target.result;
         console.log('We have data ');
@@ -22,6 +27,7 @@ function Database(text) {
         getAllTodoItems();
     }
 
+    // when database open at first the function run code to setting database and create the threat to store data
     request.onupgradeneeded = function (e) {
         let db = e.target.result;
         let objectStore = db.createObjectStore('notes', { keyPath: 'id', autoIncrement: true });
@@ -30,22 +36,29 @@ function Database(text) {
     }
 }
 
-function addData(text) {
-    if (!text == '') {
-        let data =
-        {
-            text: text,
-            id: new Date().getTime()
+// get ID use check positve of NODES and use update DATE tend positive ID; TEXT is input value user input;
+/*The function have get ID positve to check ID own 
+the NODES and add TEXT.value to database*/
+function updateObject(id, text) {
+    let indexdb = db;
+    let transaction = indexdb.transaction(['notes'], 'readwrite');
+    let objectStore = transaction.objectStore('notes');
+    const objectStoreTitleRequest = objectStore.get(id);
 
+    objectStore.onsuccess = function () {
+        const data = objectStoreTitleRequest.result;
+        data.notified = text.value;
+
+        const updateTitleRequest = objectStore.put(data);
+
+        updateTitleRequest.onsuccess = () => {
+            getAllTodoItems();
         };
-        let indexdb = db;
-        let transaction = indexdb.transaction(['notes'], 'readwrite');
-        let objectStore = transaction.objectStore('notes');
-        let request = objectStore.put(data);
-        console.log('Add data final!' + data);
     }
 }
 
+
+// get iD positive of NODES to remove TEXT.value in database
 function deleteDB(id) {
     let indexdb = db;
     let transaction = indexdb.transaction(['notes'], 'readwrite');
@@ -55,6 +68,8 @@ function deleteDB(id) {
     console.log('Database has remove data');
 }
 
+
+// function render data on database down display NODES
 function getAllTodoItems() {
     console.log('Start get all data')
     main.innerHTML = '';
@@ -72,6 +87,12 @@ function getAllTodoItems() {
     };
 }
 
+// when click buttom ADD the function addNote will run
+/* Create content in function to excute OOP when you click buttom addNote create
+a object and have content in here the addNote is object main
+
+deleteBtn will deltete object and call function deletecDB;
+ */
 function addNote(cursorTEX = "", cursorID) {
     const para = document.createElement('div');
     para.classList.add('row');
@@ -101,12 +122,10 @@ function addNote(cursorTEX = "", cursorID) {
             textArea.classList.add('none');
             context.classList.add('hidden')
             count = false;
-            Database(textArea.value);
         } else {
             textArea.classList.remove('none');
             context.classList.remove('hidden')
             count = true;
-            updateObject(textArea);
         }
     });
     deleteBtn.addEventListener('click', () => {
@@ -118,27 +137,12 @@ function addNote(cursorTEX = "", cursorID) {
         const { value } = e.target;
         p.textContent = value;
         context.append(p);
-        updateObject(value);
+     
+        if (value != '') {
+            updateObject(cursorID, value);
+        }
     })
     main.appendChild(para);
-}
-
-function updateObject(e) {
-    let indexdb = db;
-    let transaction = indexdb.transaction(['notes'], 'readwrite');
-    let objectStore = transaction.objectStore('notes');
-    const objectStoreTitleRequest = objectStore.get(text);
-
-    objectStore.onsuccess = function () {
-        const data = objectStoreTitleRequest.result;
-        data.notified = e.value;
-
-        const updateTitleRequest = objectStore.put(data);
-
-        updateTitleRequest.onsuccess = () => {
-            getAllTodoItems();
-        };
-    }
 }
 
 
