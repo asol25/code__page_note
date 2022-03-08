@@ -23,7 +23,6 @@ function Database(text) {
     request.onsuccess = function (e) {
         db = e.target.result;
         console.log('We have data ');
-        addData(text);
         getAllTodoItems();
     }
 
@@ -35,28 +34,6 @@ function Database(text) {
         console.log('Set up 100% Database')
     }
 }
-
-// get ID use check positve of NODES and use update DATE tend positive ID; TEXT is input value user input;
-/*The function have get ID positve to check ID own 
-the NODES and add TEXT.value to database*/
-function updateObject(id, text) {
-    let indexdb = db;
-    let transaction = indexdb.transaction(['notes'], 'readwrite');
-    let objectStore = transaction.objectStore('notes');
-    const objectStoreTitleRequest = objectStore.get(id);
-
-    objectStore.onsuccess = function () {
-        const data = objectStoreTitleRequest.result;
-        data.notified = text.value;
-
-        const updateTitleRequest = objectStore.put(data);
-
-        updateTitleRequest.onsuccess = () => {
-            getAllTodoItems();
-        };
-    }
-}
-
 
 // get iD positive of NODES to remove TEXT.value in database
 function deleteDB(id) {
@@ -72,7 +49,7 @@ function deleteDB(id) {
 // function render data on database down display NODES
 function getAllTodoItems() {
     console.log('Start get all data')
-    main.innerHTML = '';
+    // main.innerHTML = '';
 
     let indexdb = db;
     let transaction = indexdb.transaction(['notes'], 'readwrite');
@@ -81,7 +58,7 @@ function getAllTodoItems() {
     cursorRequest.onsuccess = function (e) {
         var result = e.target.result;
         if (result) {
-            addNote(result.value.text, result.value.id);
+            addNote(result.value.text_content, result.value.id);
             result.continue();
         }
     };
@@ -93,7 +70,10 @@ a object and have content in here the addNote is object main
 
 deleteBtn will deltete object and call function deletecDB;
  */
-function addNote(cursorTEX = "", cursorID) {
+var index = 0
+function addNote(cursorTEX = "", cursorID = "") {
+    ++index;
+    console.log(cursorTEX)
     const para = document.createElement('div');
     para.classList.add('row');
     para.innerHTML = ` <div class="col-12 grid_note_container">                                
@@ -136,13 +116,37 @@ function addNote(cursorTEX = "", cursorID) {
     textArea.addEventListener('input', (e) => {
         const { value } = e.target;
         p.textContent = value;
-        context.append(p);
-     
+
         if (value != '') {
-            updateObject(cursorID, value);
+            let data = {
+                text_content: value,
+                id: index
+            }   
+            updateObject(data);
         }
+        context.append(p);
     })
     main.appendChild(para);
+}
+
+// get ID use check positve of NODES and use update DATE tend positive ID; TEXT is input value user input;
+/*The function have get ID positve to check ID own 
+the NODES and add TEXT.value to database*/
+function updateObject(data) {
+    let id = data.id;
+    console.log(id)
+    let indexdb = db;
+    let transaction = indexdb.transaction(['notes'], 'readwrite');
+    let objectStore = transaction.objectStore('notes');
+    const objectStoreTitleRequest = objectStore.get(id);
+
+    objectStoreTitleRequest.onsuccess = function () {
+        const updateTitleRequest = objectStore.put(data);
+
+        updateTitleRequest.onsuccess = () => {
+            console.log('Update!')
+        };
+    }
 }
 
 
