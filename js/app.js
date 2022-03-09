@@ -70,10 +70,12 @@ a object and have content in here the addNote is object main
 
 deleteBtn will deltete object and call function deletecDB;
  */
-var index = 0
+let index = 0;
+
 function addNote(cursorTEX = "", cursorID = "") {
     ++index;
-    console.log(cursorTEX)
+    let checker = index;
+    console.log(cursorID)
     const para = document.createElement('div');
     para.classList.add('row');
     para.innerHTML = ` <div class="col-12 grid_note_container">                                
@@ -116,15 +118,15 @@ function addNote(cursorTEX = "", cursorID = "") {
     textArea.addEventListener('input', (e) => {
         const { value } = e.target;
         p.textContent = value;
+        context.append(p);
 
         if (value != '') {
             let data = {
                 text_content: value,
-                id: index
+                id: checker
             }   
             updateObject(data);
         }
-        context.append(p);
     })
     main.appendChild(para);
 }
