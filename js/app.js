@@ -70,9 +70,12 @@ a object and have content in here the addNote is object main
 
 deleteBtn will deltete object and call function deletecDB;
  */
+let arrays = [];
+console.log(arrays.addNote)
 let index = 0;
 
 function addNote(cursorTEX = "", cursorID = "") {
+    arrays.push(addNote)
     ++index;
     let checker = index;
     console.log(cursorID)
@@ -133,7 +136,9 @@ function addNote(cursorTEX = "", cursorID = "") {
 
 // get ID use check positve of NODES and use update DATE tend positive ID; TEXT is input value user input;
 /*The function have get ID positve to check ID own 
-the NODES and add TEXT.value to database*/
+the NODES and add TEXT.value to database
+but I don't display screen, if you display will err.
+I just add value to database and display is the working of database when onsuccess*/
 function updateObject(data) {
     let id = data.id;
     console.log(id)
